@@ -20,3 +20,22 @@ let orangeImg;
 let bananaImg;
 let change = true;
 let noInternet = false;
+
+const noopSound = {
+	play() {},
+	rate() {},
+	setVolume() {},
+};
+
+eatSound = noopSound;
+deadSound = noopSound;
+
+function assetPath(relativePath) {
+	const base = window.location.pathname.endsWith("/")
+		? window.location.pathname
+		: window.location.pathname.substring(
+				0,
+				window.location.pathname.lastIndexOf("/") + 1
+		  );
+	return base + relativePath;
+}

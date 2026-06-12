@@ -1,10 +1,8 @@
 function preload() {
-	deadSound = loadSound("sounds/Oof.mp3");
-	eatSound = loadSound("sounds/munch-sound-effect.mp3");
-	appleImg = loadImage("img/Apple.png");
-	pearImg = loadImage("img/Pear.png");
-	orangeImg = loadImage("img/Orange.png");
-	bananaImg = loadImage("img/Banana.png");
+	appleImg = loadImage(assetPath("img/Apple.png"));
+	pearImg = loadImage(assetPath("img/Pear.png"));
+	orangeImg = loadImage(assetPath("img/Orange.png"));
+	bananaImg = loadImage(assetPath("img/Banana.png"));
 }
 
 function setup() {
@@ -20,10 +18,6 @@ function setup() {
 	foodLocation();
 	record1.length = 0;
 	record2.length = 0;
-
-	deadSound.rate(4);
-	eatSound.rate(1.7);
-	eatSound.setVolume(0.25);
 
 	submit = 0;
 	startScreen();
@@ -41,7 +35,7 @@ async function getScore() {
 			"Content-Type": "application/json",
 		},
 	};
-	var response = await fetch("getTheScore", none);
+	var response = await fetch(assetPath("getTheScore"), none);
 	var SCORE = await response.json();
 	record1 = SCORE.lvl1;
 	record2 = SCORE.lvl2;
@@ -402,7 +396,7 @@ function nameSubmitted() {
 		},
 		body: JSON.stringify(data),
 	};
-	fetch("api", options);
+	fetch(assetPath("api"), options);
 
 	end = 3;
 	submit = 1;
@@ -488,21 +482,21 @@ function highscoreScreen() {
 			);
 			text(
 				i +
-					11 +
-					". " +
-					record1[i + 10].name +
-					": " +
-					record1[i + 10].score,
+				11 +
+				". " +
+				record1[i + 10].name +
+				": " +
+				record1[i + 10].score,
 				width / 2,
 				(i + 5) * (blocks + 4)
 			);
 			text(
 				i +
-					21 +
-					". " +
-					record1[i + 20].name +
-					": " +
-					record1[i + 20].score,
+				21 +
+				". " +
+				record1[i + 20].name +
+				": " +
+				record1[i + 20].score,
 				5 * (width / 6),
 				(i + 5) * (blocks + 4)
 			);
@@ -516,21 +510,21 @@ function highscoreScreen() {
 			);
 			text(
 				i +
-					11 +
-					". " +
-					record2[i + 10].name +
-					": " +
-					record2[i + 10].score,
+				11 +
+				". " +
+				record2[i + 10].name +
+				": " +
+				record2[i + 10].score,
 				width / 2,
 				(i + 5) * (blocks + 4)
 			);
 			text(
 				i +
-					21 +
-					". " +
-					record2[i + 20].name +
-					": " +
-					record2[i + 20].score,
+				21 +
+				". " +
+				record2[i + 20].name +
+				": " +
+				record2[i + 20].score,
 				5 * (width / 6),
 				(i + 5) * (blocks + 4)
 			);
