@@ -5,6 +5,7 @@ const express = require("express");
 const limitter = require("express-rate-limit");
 
 const app = express();
+const BASE_PATH = (process.env.BASE_PATH || "").replace(/\/$/, "");
 
 const apiLimitter = limitter({
   windowMs: 2 * 60 * 1000,
@@ -61,11 +62,13 @@ if (isFirebaseConfigured()) {
 }
 
 const port = process.env.PORT || 1412;
+const host = process.env.HOST || "127.0.0.1";
 
-app.use(express.static("public"));
-app.use(express.json({ limit: "200b" }));
+const router = express.Router();
+router.use(express.static("public"));
+router.use(express.json({ limit: "200b" }));
 
-app.get("/getTheScore", async (_request, response) => {
+router.get("/getTheScore", async (_request, response) => {
   console.log("I Got A Request To Send Data!!");
 
   if (firebaseDB) {
@@ -88,7 +91,7 @@ app.get("/getTheScore", async (_request, response) => {
   });
 });
 
-app.post("/api", apiLimitter, async (request, response) => {
+router.post("/api", apiLimitter, async (request, response) => {
   console.log("I Got A Request To Add Data!!");
 
   const data = {
@@ -139,8 +142,15 @@ app.post("/api", apiLimitter, async (request, response) => {
   response.end();
 });
 
-const host = process.env.HOST || "127.0.0.1";
+if (BASE_PATH) {
+  app.use(BASE_PATH, router);
+} else {
+  app.use(router);
+}
 
-app.listen(port, host, () =>
-  console.log(`Starting server at http://localhost:${port}`)
-);
+app.listen(port, host, () => {
+  const prefix = BASE_PATH || "";
+  console.log(
+    `Starting server at http://localhost:${port}${prefix} (BASE_PATH=${prefix || "/"})`
+  );
+});

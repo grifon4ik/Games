@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io({ path: window.__SOCKET_IO_PATH__ || "/socket.io" });
 const SHIP_SIZES = [5, 4, 3, 3, 2];
 const GRID_SIZE = 10;
 

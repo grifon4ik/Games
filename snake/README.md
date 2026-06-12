@@ -38,11 +38,12 @@ MEASUREMENT_ID=G-XXXXXXXX
 PORT=1412
 ```
 
-4. Run `npm start` again.
+1. Run `npm start` again.
 
 ### AWS / EC2
 
-- Set `HOST=127.0.0.1` and `PORT=1412` when running behind nginx (Lesson 6 Ansible playbook does this via systemd).
+- Set `HOST=127.0.0.1` and `PORT=1412` when running behind nginx.
+- For Game Hub path routing set `BASE_PATH=/snake` (Lesson 6 Ansible does this).
 - Firebase is not required on EC2; local in-memory scores work by default.
 
 ## Stack

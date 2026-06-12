@@ -173,11 +173,18 @@ See [.gitignore](.gitignore): `node_modules/`, `.next/`, `.env`, `*.pem`, game r
 | Lesson 5 | nginx + static page | Terraform + Ansible |
 | Lesson 6 | Any game from this repo | Terraform + Ansible + `git clone` |
 
-Lesson 6 Ansible playbooks clone this repository on EC2:
+Lesson 6 deploys a **Game Hub** on one EC2 instance:
 
-```yaml
-git_repo: "https://github.com/grifon4ik/Games.git"
-git_clone_dir: /opt/Games
+```text
+http://PUBLIC_IP/              → hub menu
+http://PUBLIC_IP/battleship/   → Battleship
+http://PUBLIC_IP/snake/        → Snake
+http://PUBLIC_IP/pacman/       → Pac-Man
+http://PUBLIC_IP/jokes/        → Dad Jokes
 ```
 
-Example playbooks: `ansible-playbook-battleship.yaml`, `ansible-playbook-snake.yaml`, `ansible-playbook-pacman.yaml`, `ansible-playbook-deadjokes.yaml`
+```bash
+ansible-playbook -i ../hosts ansible-playbook-gamehub.yaml
+```
+
+See `DevOps_2026_May_18/Practice/Lesson_6/ansible/` in the course repo.

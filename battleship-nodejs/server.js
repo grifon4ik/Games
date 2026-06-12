@@ -5,12 +5,33 @@ const path = require('path');
 const crypto = require('crypto');
 const fs = require('fs').promises;
 
+const BASE_PATH = (process.env.BASE_PATH || "").replace(/\/$/, "");
+const SOCKET_PATH = BASE_PATH ? `${BASE_PATH}/socket.io` : "/socket.io";
+
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, { path: SOCKET_PATH });
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+const publicDir = path.join(__dirname, "public");
+
+function mountPublicRoutes(target) {
+  target.get("/runtime-config.js", (_req, res) => {
+    res.type("application/javascript");
+    res.send(`window.__SOCKET_IO_PATH__=${JSON.stringify(SOCKET_PATH)};`);
+  });
+  target.use(express.static(publicDir));
+  target.get("/", (_req, res) => {
+    res.sendFile(path.join(publicDir, "index.html"));
+  });
+}
+
+if (BASE_PATH) {
+  const router = express.Router();
+  mountPublicRoutes(router);
+  app.use(BASE_PATH, router);
+} else {
+  mountPublicRoutes(app);
+}
 
 // In-memory storage for game sessions
 const gameSessions = new Map();
@@ -47,7 +68,7 @@ class GameSession {
 
     addPlayer(playerId, socketId, playerName = null) {
         if (this.players.size >= 2) return false;
-        
+
         const playerNumber = this.players.size + 1;
         this.players.set(playerId, {
             id: playerId,
@@ -57,14 +78,14 @@ class GameSession {
             grid: Array(10).fill().map(() => Array(10).fill(0)), // 0: empty, 1: ship, 2: hit, 3: miss
             ready: false
         });
-        
+
         // Store player name
         this.playerNames.set(playerId, playerName || `Player ${playerNumber}`);
-        
+
         if (this.players.size === 2) {
             this.gameState = 'placing';
         }
-        
+
         return true;
     }
 
@@ -136,7 +157,7 @@ class GameSession {
     startMoveTimer() {
         this.clearMoveTimer();
         this.moveStartTime = Date.now();
-        
+
         this.moveTimer = setTimeout(() => {
             this.handleMoveTimeout();
         }, MOVE_TIME_LIMIT);
@@ -151,13 +172,13 @@ class GameSession {
 
     handleMoveTimeout() {
         if (this.gameState !== 'playing') return;
-        
+
         // Switch to opponent's turn
         const opponent = this.getOpponent(this.currentTurn);
         if (opponent) {
             this.currentTurn = opponent.id;
             this.startMoveTimer();
-            
+
             // Notify all players about the timeout
             io.to(this.id).emit('moveTimeout', {
                 currentTurn: this.currentTurn,
@@ -170,17 +191,17 @@ class GameSession {
         if (playerId !== this.hostId || this.gameState !== 'playing') {
             return { success: false, reason: 'Only host can pause during gameplay' };
         }
-        
+
         this.isPaused = true;
         this.gameState = 'paused';
-        
+
         // Store remaining time and clear timer
         if (this.moveTimer) {
             const elapsed = Date.now() - this.moveStartTime;
             this.pausedTimeRemaining = Math.max(0, MOVE_TIME_LIMIT - elapsed);
             this.clearMoveTimer();
         }
-        
+
         return { success: true };
     }
 
@@ -188,10 +209,10 @@ class GameSession {
         if (playerId !== this.hostId || this.gameState !== 'paused') {
             return { success: false, reason: 'Only host can resume paused games' };
         }
-        
+
         this.isPaused = false;
         this.gameState = 'playing';
-        
+
         // Restart timer with remaining time
         if (this.pausedTimeRemaining !== null) {
             this.moveStartTime = Date.now();
@@ -201,7 +222,7 @@ class GameSession {
         } else {
             this.startMoveTimer();
         }
-        
+
         return { success: true, timeRemaining: this.pausedTimeRemaining || MOVE_TIME_LIMIT };
     }
 
@@ -239,7 +260,7 @@ class GameSession {
         }
 
         // Check for win condition
-        const allShipsSunk = opponent.ships.every(ship => 
+        const allShipsSunk = opponent.ships.every(ship =>
             ship.positions.every(pos => opponent.grid[pos.row][pos.col] === 2)
         );
 
@@ -299,14 +320,14 @@ class GameSession {
                     name: this.playerNames.get(Array.from(this.players.keys())[0]),
                     hits: this.gameStats.player1Hits,
                     misses: this.gameStats.player1Misses,
-                    accuracy: this.gameStats.player1Hits + this.gameStats.player1Misses > 0 ? 
+                    accuracy: this.gameStats.player1Hits + this.gameStats.player1Misses > 0 ?
                         Math.round((this.gameStats.player1Hits / (this.gameStats.player1Hits + this.gameStats.player1Misses)) * 100) : 0
                 },
                 player2: {
                     name: this.playerNames.get(Array.from(this.players.keys())[1]),
                     hits: this.gameStats.player2Hits,
                     misses: this.gameStats.player2Misses,
-                    accuracy: this.gameStats.player2Hits + this.gameStats.player2Misses > 0 ? 
+                    accuracy: this.gameStats.player2Hits + this.gameStats.player2Misses > 0 ?
                         Math.round((this.gameStats.player2Hits / (this.gameStats.player2Hits + this.gameStats.player2Misses)) * 100) : 0
                 }
             }
@@ -344,7 +365,7 @@ io.on('connection', (socket) => {
             gameState: session.gameState,
             createdAt: session.createdAt
         }));
-    
+
     socket.emit('sessionList', activeSessions);
 
     // Create new game session
@@ -352,28 +373,28 @@ io.on('connection', (socket) => {
         const sessionId = crypto.randomUUID();
         const playerId = socket.id;
         const session = new GameSession(sessionId, playerId, data.password, data.sessionName);
-        
+
         // Add player name if provided
         if (data.playerName) {
             session.playerNames.set(playerId, data.playerName);
         }
-        
+
         session.addPlayer(playerId, socket.id);
         gameSessions.set(sessionId, session);
         socket.join(sessionId);
-        
+
         // Generate invite link
-        const inviteLink = data.password ? 
+        const inviteLink = data.password ?
             `http://localhost:3000?session=${sessionId}&password=${encodeURIComponent(data.password)}` :
             `http://localhost:3000?session=${sessionId}`;
-        
+
         socket.emit('sessionCreated', {
             sessionId: sessionId,
             playerId: playerId,
             isHost: true,
             inviteLink: inviteLink
         });
-        
+
         // Broadcast updated session list
         const activeSessions = Array.from(gameSessions.values())
             .filter(session => session.gameState !== 'finished')
@@ -385,7 +406,7 @@ io.on('connection', (socket) => {
                 gameState: session.gameState,
                 createdAt: session.createdAt
             }));
-        
+
         io.emit('sessionList', activeSessions);
     });
 
@@ -439,7 +460,7 @@ io.on('connection', (socket) => {
                 gameState: session.gameState,
                 createdAt: session.createdAt
             }));
-        
+
         io.emit('sessionList', activeSessions);
     });
 
@@ -451,7 +472,7 @@ io.on('connection', (socket) => {
         const success = session.placeShips(data.playerId, data.ships);
         if (success) {
             socket.emit('shipsPlaced');
-            
+
             if (session.gameState === 'playing') {
                 io.to(data.sessionId).emit('gameStarted', {
                     currentTurn: session.currentTurn,
@@ -471,7 +492,7 @@ io.on('connection', (socket) => {
         if (!session) return;
 
         const result = session.makeMove(data.playerId, data.row, data.col);
-        
+
         if (result.valid) {
             // Send result to all players
             io.to(data.sessionId).emit('moveResult', {
@@ -498,7 +519,7 @@ io.on('connection', (socket) => {
                             gameState: session.gameState,
                             createdAt: session.createdAt
                         }));
-                    
+
                     io.emit('sessionList', activeSessions);
                 }, 5000); // Wait 5 seconds before updating session list
             }
@@ -540,12 +561,12 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
-        
+
         // Find and remove player from any session
         for (const [sessionId, session] of gameSessions) {
             if (session.players.has(socket.id)) {
                 session.players.delete(socket.id);
-                
+
                 if (session.players.size === 0) {
                     // No players left, archive unfinished game if it was in progress
                     if (session.gameState === 'playing' || session.gameState === 'placing') {
@@ -587,8 +608,8 @@ setInterval(() => {
     const CLEANUP_THRESHOLD = 30 * 60 * 1000; // 30 minutes
 
     for (let [sessionId, session] of gameSessions.entries()) {
-        if (session.gameState === 'finished' && 
-            session.finishedAt && 
+        if (session.gameState === 'finished' &&
+            session.finishedAt &&
             (now - session.finishedAt.getTime()) > CLEANUP_THRESHOLD) {
             gameSessions.delete(sessionId);
             console.log(`Cleaned up finished session: ${sessionId}`);

@@ -41,7 +41,7 @@ async function getScore() {
 			"Content-Type": "application/json",
 		},
 	};
-	var response = await fetch("/getTheScore", none);
+	var response = await fetch("getTheScore", none);
 	var SCORE = await response.json();
 	record1 = SCORE.lvl1;
 	record2 = SCORE.lvl2;
@@ -402,7 +402,7 @@ function nameSubmitted() {
 		},
 		body: JSON.stringify(data),
 	};
-	fetch("/api", options);
+	fetch("api", options);
 
 	end = 3;
 	submit = 1;
