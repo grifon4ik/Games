@@ -1,10 +1,10 @@
 function preload() {
-	deadSound = loadSound("../sounds/Oof.mp3");
-	eatSound = loadSound("../sounds/munch-sound-effect.mp3");
-	appleImg = loadImage("../img/Apple.png");
-	pearImg = loadImage("../img/Pear.png");
-	orangeImg = loadImage("../img/Orange.png");
-	bananaImg = loadImage("../img/Banana.png");
+	deadSound = loadSound("sounds/Oof.mp3");
+	eatSound = loadSound("sounds/munch-sound-effect.mp3");
+	appleImg = loadImage("img/Apple.png");
+	pearImg = loadImage("img/Pear.png");
+	orangeImg = loadImage("img/Orange.png");
+	bananaImg = loadImage("img/Banana.png");
 }
 
 function setup() {
