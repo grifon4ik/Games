@@ -8,6 +8,7 @@ DevOps course game projects.
 |---|---|---|
 | Battleship | Node.js, Express, Socket.io | [battleship-nodejs/](battleship-nodejs/) |
 | Pac-Man | Next.js, static build | [pacman2.0/](pacman2.0/) |
+| Dad Jokes | Static HTML + API | [deadjokes/](deadjokes/) |
 
 ## battleship-nodejs
 
@@ -35,3 +36,15 @@ npm start
 ```
 
 Source: [grifon4ik/pacman2.0](https://github.com/grifon4ik/pacman2.0)
+
+## deadjokes
+
+Random dad jokes from [icanhazdadjoke.com](https://icanhazdadjoke.com).
+
+```bash
+cd deadjokes
+python3 -m http.server 8080
+# http://localhost:8080
+```
+
+Source: [femiakinola/deadjokes](https://github.com/femiakinola/deadjokes)
