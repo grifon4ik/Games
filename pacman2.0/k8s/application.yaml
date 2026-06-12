@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pacman                # Название этого приложения в ArgoCD
+  namespace: argocd           # Где находится сам ArgoCD
+spec:
+  project: default            # Проект ArgoCD, можно не менять
+  source:
+    repoURL: https://github.com/grifon4ik/pacman2.0.git  # Git-репозиторий
+    targetRevision: main                                # Ветка
+    path: k8s                                            # Папка с манифестами
+  destination:
+    server: https://kubernetes.default.svc              # Адрес API Kubernetes
+    namespace: pacman                                    # Куда устанавливать (namespace)
+  syncPolicy:
+    automated:              # Автоматическая синхронизация
+      prune: true           # Удаляет старые ресурсы, если их нет в Git
+      selfHeal: true        # Самовосстановление при изменениях вручную

@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pacman-service
+  namespace: pacman
+spec:
+  selector:
+    app: pacman
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      nodePort: 31234
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: pacman
+spec:
+  selector:
+    app: mongo
+  ports:
+    - port: 27017
