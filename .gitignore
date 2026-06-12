@@ -6,3 +6,5 @@ node_modules/
 game_archive.json
 archived_games.json
 .DS_Store
+.idea/
+.vscode/
