@@ -17,6 +17,7 @@ const gameSessions = new Map();
 const MOVE_TIME_LIMIT = 30000; // 30 seconds in milliseconds
 const ARCHIVE_FILE = 'game_archive.json';
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
 
 class GameSession {
     constructor(id, creatorId, password = null, sessionName = null) {
@@ -576,8 +577,8 @@ app.get('/api/archive', async (req, res) => {
 });
 
 // Start server
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+server.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
 });
 
 // Clean up old finished sessions periodically (every 30 minutes)

@@ -139,6 +139,8 @@ app.post("/api", apiLimitter, async (request, response) => {
   response.end();
 });
 
-app.listen(port, () =>
+const host = process.env.HOST || "127.0.0.1";
+
+app.listen(port, host, () =>
   console.log(`Starting server at http://localhost:${port}`)
 );

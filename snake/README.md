@@ -1,30 +1,30 @@
 # Snake
 
-Онлайн-игра «Змейка» в браузере. Два уровня, таблица рекордов, звук и p5.js.
+Online Snake game in the browser. Two levels, high-score table, sound effects, and p5.js graphics.
 
-## Запуск
+## Quick start
 
 ```bash
-npm install    # создаёт .env автоматически, если файла нет
-npm start      # повторяет setup и запускает сервер
+npm install    # creates .env automatically if missing
+npm start      # runs setup, then starts the server
 ```
 
-Открыть: `http://localhost:1412`
+Open: `http://localhost:1412`
 
-### Режимы
+### Modes
 
-| Режим | Условие | Рекорды |
+| Mode | When | High scores |
 |---|---|---|
-| **Локальный** (по умолчанию) | `.env` пустой | В памяти сервера |
-| **Firebase** | заполнены `PROJECT_ID` и `DATABASE_URL` | Firebase Realtime Database |
+| **Local** (default) | empty `.env` or placeholders | In-memory on server |
+| **Firebase** | `PROJECT_ID` + `DATABASE_URL` set in `.env` | Firebase Realtime Database |
 
-При первом `npm install` скрипт `scripts/setup.js` копирует `.env.example` → `.env`.
+On first `npm install`, `scripts/setup.js` copies `.env.example` → `.env`.
 
-### Firebase (опционально)
+### Firebase (optional)
 
-1. Создайте проект в [Firebase Console](https://console.firebase.google.com/)
-2. Включите **Realtime Database**
-3. Скопируйте конфиг веб-приложения в `.env`:
+1. Create a project in [Firebase Console](https://console.firebase.google.com/)
+2. Enable **Realtime Database**
+3. Copy the web app config into `.env`:
 
 ```env
 API_KEY=your-api-key
@@ -38,12 +38,17 @@ MEASUREMENT_ID=G-XXXXXXXX
 PORT=1412
 ```
 
-4. Запустите `npm start` снова.
+4. Run `npm start` again.
 
-## Стек
+### AWS / EC2
 
-- [p5.js](https://p5js.org/) — отрисовка и логика
-- [Node.js](https://nodejs.org/) + Express — сервер и API рекордов
-- Firebase (опционально) — облачные рекорды
+- Set `HOST=127.0.0.1` and `PORT=1412` when running behind nginx (Lesson 6 Ansible playbook does this via systemd).
+- Firebase is not required on EC2; local in-memory scores work by default.
 
-Источник: [OutdatedGuy/Outdated-Snake](https://github.com/OutdatedGuy/Outdated-Snake)
+## Stack
+
+- [p5.js](https://p5js.org/) — rendering and game logic
+- [Node.js](https://nodejs.org/) + Express — server and score API
+- Firebase (optional) — cloud high scores
+
+Source: [OutdatedGuy/Outdated-Snake](https://github.com/OutdatedGuy/Outdated-Snake)

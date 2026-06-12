@@ -1,8 +1,8 @@
 # Games
 
-Коллекция браузерных игр и мини-приложений для курса DevOps.
+Browser games and mini-apps for the DevOps course.
 
-**Репозиторий:** [github.com/grifon4ik/Games](https://github.com/grifon4ik/Games)
+**Repository:** [github.com/grifon4ik/Games](https://github.com/grifon4ik/Games)
 
 ```bash
 git clone https://github.com/grifon4ik/Games.git
@@ -11,12 +11,12 @@ cd Games
 
 ---
 
-## Список проектов
+## Projects
 
-| Игра | Папка | Язык / стек | Тип | Порт (локально) |
+| Game | Folder | Stack | Type | Local port |
 |---|---|---|---|---|
 | **Battleship** | [battleship-nodejs/](battleship-nodejs/) | Node.js, Express, Socket.io | Multiplayer (WebSocket) | 3000 |
-| **Pac-Man** | [pacman2.0/](pacman2.0/) | JavaScript (Vanilla JS + Next.js) | Single-player arcade | 8080 / 3000 |
+| **Pac-Man** | [pacman2.0/](pacman2.0/) | Vanilla JavaScript (+ optional Next.js) | Single-player arcade | 8080 / 3000 |
 | **Dad Jokes** | [deadjokes/](deadjokes/) | HTML, CSS, JavaScript | Static + REST API | 8080 |
 | **Snake** | [snake/](snake/) | Node.js, Express, p5.js | Single-player + high scores | 1412 |
 
@@ -24,7 +24,7 @@ cd Games
 
 ## battleship-nodejs
 
-Мультиплеерный «Морской бой» в браузере. Два игрока, сессии, расстановка кораблей, ходы в реальном времени.
+Multiplayer Battleship in the browser. Two players, ship placement, real-time turns.
 
 | | |
 |---|---|
@@ -32,7 +32,7 @@ cd Games
 | **Realtime** | Socket.io |
 | **Frontend** | HTML, CSS, Vanilla JS |
 
-### Запуск локально
+### Run locally
 
 ```bash
 cd battleship-nodejs
@@ -40,36 +40,36 @@ npm install
 npm start
 ```
 
-Открыть: `http://localhost:3000` (два окна/вкладки = два игрока).
+Open: `http://localhost:3000` (two tabs = two players).
 
-### DevOps (Lesson 6)
+### AWS / DevOps (Lesson 6)
 
-Деплой через Ansible: `git clone` → `npm install` → systemd + nginx (80 → 3000).
+Ansible: `git clone` → `npm install` → systemd + nginx (`80 → 3000`, WebSocket enabled).
 
-Источник: [jaydio/battleship-nodejs](https://github.com/jaydio/battleship-nodejs)
+Source: [jaydio/battleship-nodejs](https://github.com/jaydio/battleship-nodejs)
 
 ---
 
 ## pacman2.0
 
-Классический Pac-Man в браузере. Оригинальная логика на Vanilla JavaScript; в репозитории также есть обёртка Next.js.
+Classic Pac-Man in the browser. Vanilla JavaScript core; optional Next.js wrapper in the repo.
 
 | | |
 |---|---|
-| **Игра** | Vanilla JavaScript, Canvas |
-| **Сборка (опционально)** | Next.js 13 |
-| **Инфра (опционально)** | Docker, Kubernetes manifests в `k8s/` |
+| **Game** | Vanilla JavaScript, Canvas |
+| **Build (optional)** | Next.js 13 |
+| **Infra (optional)** | Docker, Kubernetes manifests in `k8s/` |
 
-### Запуск (простой способ)
+### Run (simple)
 
 ```bash
 cd pacman2.0
 python3 -m http.server 8080
 ```
 
-Открыть: `http://localhost:8080`
+Open: `http://localhost:8080`
 
-### Запуск через Next.js
+### Run via Next.js
 
 ```bash
 cd pacman2.0
@@ -78,47 +78,55 @@ npm run build
 npm start
 ```
 
-Открыть: `http://localhost:3000`
+Open: `http://localhost:3000`
 
-Источник: [grifon4ik/pacman2.0](https://github.com/grifon4ik/pacman2.0) (форк [masonicGIT/pacman](https://github.com/masonicGIT/pacman))
+### AWS / DevOps (Lesson 6)
+
+Ansible serves static files with nginx from `/opt/Games/pacman2.0` on port 80.
+
+Source: [grifon4ik/pacman2.0](https://github.com/grifon4ik/pacman2.0) (fork of [masonicGIT/pacman](https://github.com/masonicGIT/pacman))
 
 ---
 
 ## deadjokes
 
-Генератор случайных dad jokes через публичное API.
+Random dad jokes via a public API.
 
 | | |
 |---|---|
 | **Frontend** | HTML, CSS, Vanilla JavaScript |
 | **API** | [icanhazdadjoke.com](https://icanhazdadjoke.com) |
 
-### Запуск
+### Run locally
 
 ```bash
 cd deadjokes
 python3 -m http.server 8080
 ```
 
-Открыть: `http://localhost:8080`
+Open: `http://localhost:8080`
 
-> Не открывайте `index.html` через `file://` — fetch к API может не работать. Нужен HTTP-сервер.
+> Do not open `index.html` via `file://` — the API fetch may fail. Use an HTTP server.
 
-Источник: [femiakinola/deadjokes](https://github.com/femiakinola/deadjokes)
+### AWS / DevOps (Lesson 6)
+
+Ansible serves static files with nginx on port 80. Outbound HTTPS to the joke API must be allowed (default EC2 egress).
+
+Source: [femiakinola/deadjokes](https://github.com/femiakinola/deadjokes)
 
 ---
 
 ## snake
 
-Классическая «Змейка» в браузере с двумя уровнями и таблицей рекордов.
+Classic Snake in the browser with two levels and a high-score table.
 
 | | |
 |---|---|
-| **Игра** | p5.js, Canvas |
+| **Game** | p5.js, Canvas |
 | **Backend** | Node.js, Express |
-| **Рекорды** | Локально (по умолчанию) или Firebase |
+| **Scores** | In-memory (default) or Firebase |
 
-### Запуск
+### Run locally
 
 ```bash
 cd snake
@@ -126,15 +134,19 @@ npm install
 npm start
 ```
 
-Открыть: `http://localhost:1412`
+Open: `http://localhost:1412`
 
-> При `npm install` автоматически создаётся `.env` из `.env.example`. Firebase не обязателен — без него рекорды хранятся в памяти сервера.
+> `npm install` creates `.env` from `.env.example` automatically. Firebase is optional — without it, scores are stored in server memory.
 
-Источник: [OutdatedGuy/Outdated-Snake](https://github.com/OutdatedGuy/Outdated-Snake)
+### AWS / DevOps (Lesson 6)
+
+Ansible: `git clone` → `npm install` → systemd + nginx (`80 → 1412`). Local score mode works out of the box on EC2.
+
+Source: [OutdatedGuy/Outdated-Snake](https://github.com/OutdatedGuy/Outdated-Snake)
 
 ---
 
-## Структура репозитория
+## Repository layout
 
 ```text
 Games/
@@ -148,22 +160,24 @@ Games/
 
 ---
 
-## Что не коммитится
+## Ignored files
 
-См. [.gitignore](.gitignore): `node_modules/`, `.next/`, `.env`, `*.pem`, runtime-файлы игр.
+See [.gitignore](.gitignore): `node_modules/`, `.next/`, `.env`, `*.pem`, game runtime files.
 
 ---
 
-## DevOps-уроки
+## DevOps lessons
 
-| Урок | Игра | Инструменты |
+| Lesson | Game | Tools |
 |---|---|---|
 | Lesson 5 | nginx + static page | Terraform + Ansible |
-| Lesson 6 | Battleship | Terraform + Ansible + `git clone` |
+| Lesson 6 | Any game from this repo | Terraform + Ansible + `git clone` |
 
-Playbook Lesson 6 клонирует этот репозиторий на EC2:
+Lesson 6 Ansible playbooks clone this repository on EC2:
 
 ```yaml
 git_repo: "https://github.com/grifon4ik/Games.git"
-app_dir: /opt/Games/battleship-nodejs
+git_clone_dir: /opt/Games
 ```
+
+Example playbooks: `ansible-playbook-battleship.yaml`, `ansible-playbook-snake.yaml`, `ansible-playbook-pacman.yaml`, `ansible-playbook-deadjokes.yaml`
