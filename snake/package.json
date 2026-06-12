@@ -1,0 +1,33 @@
+{
+  "name": "snake",
+  "version": "3.1.0",
+  "description": "Snake game using Node.js, Express and p5.js",
+  "main": "server.js",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "postinstall": "node scripts/setup.js",
+    "prestart": "node scripts/setup.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Outdated Guy",
+  "license": "BSD 3-Clause License",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "firebase": "^12.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grifon4ik/Games.git",
+    "directory": "snake"
+  },
+  "bugs": {
+    "url": "https://github.com/grifon4ik/Games/issues"
+  },
+  "homepage": "https://github.com/grifon4ik/Games/tree/main/snake",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}

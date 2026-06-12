@@ -18,6 +18,7 @@ cd Games
 | **Battleship** | [battleship-nodejs/](battleship-nodejs/) | Node.js, Express, Socket.io | Multiplayer (WebSocket) | 3000 |
 | **Pac-Man** | [pacman2.0/](pacman2.0/) | JavaScript (Vanilla JS + Next.js) | Single-player arcade | 8080 / 3000 |
 | **Dad Jokes** | [deadjokes/](deadjokes/) | HTML, CSS, JavaScript | Static + REST API | 8080 |
+| **Snake** | [snake/](snake/) | Node.js, Express, p5.js | Single-player + high scores | 1412 |
 
 ---
 
@@ -107,6 +108,32 @@ python3 -m http.server 8080
 
 ---
 
+## snake
+
+Классическая «Змейка» в браузере с двумя уровнями и таблицей рекордов.
+
+| | |
+|---|---|
+| **Игра** | p5.js, Canvas |
+| **Backend** | Node.js, Express |
+| **Рекорды** | Локально (по умолчанию) или Firebase |
+
+### Запуск
+
+```bash
+cd snake
+npm install
+npm start
+```
+
+Открыть: `http://localhost:1412`
+
+> При `npm install` автоматически создаётся `.env` из `.env.example`. Firebase не обязателен — без него рекорды хранятся в памяти сервера.
+
+Источник: [OutdatedGuy/Outdated-Snake](https://github.com/OutdatedGuy/Outdated-Snake)
+
+---
+
 ## Структура репозитория
 
 ```text
@@ -115,7 +142,8 @@ Games/
 ├── .gitignore
 ├── battleship-nodejs/     # Node.js + Socket.io
 ├── pacman2.0/             # Vanilla JS (+ Next.js)
-└── deadjokes/             # Static HTML + external API
+├── deadjokes/             # Static HTML + external API
+└── snake/                 # Node.js + p5.js
 ```
 
 ---
