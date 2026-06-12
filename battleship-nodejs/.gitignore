@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.*
+
+# Runtime / game data
+game_archive.json
+archived_games.json
+*.log
+
+# Build / cache
+dist/
+.cache/
+.parcel-cache/
+coverage/
+.nyc_output
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

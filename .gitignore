@@ -1,0 +1,7 @@
+node_modules/
+*.pem
+.env
+.env.*
+game_archive.json
+archived_games.json
+.DS_Store

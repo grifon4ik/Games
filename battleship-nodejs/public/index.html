@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Battleship</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+  <main class="container">
+    <header>
+      <h1>Battleship</h1>
+      <p class="subtitle">Multiplayer DevOps lab — Terraform + Ansible + Node.js</p>
+    </header>
+
+    <section id="lobby" class="panel">
+      <h2>Lobby</h2>
+      <div class="form-grid">
+        <label>
+          Player name
+          <input id="playerName" type="text" placeholder="Admiral">
+        </label>
+        <label>
+          Session name
+          <input id="sessionName" type="text" placeholder="Thunder-Squadron">
+        </label>
+        <label>
+          Password (optional)
+          <input id="sessionPassword" type="password" placeholder="optional">
+        </label>
+      </div>
+      <div class="actions">
+        <button id="createSessionBtn" type="button">Create game</button>
+        <button id="refreshSessionsBtn" type="button" class="secondary">Refresh sessions</button>
+      </div>
+      <h3>Active sessions</h3>
+      <ul id="sessionList"></ul>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section id="game" class="panel hidden">
+      <div class="game-meta">
+        <p><strong>Session:</strong> <span id="currentSession"></span></p>
+        <p><strong>You:</strong> <span id="currentPlayer"></span></p>
+        <p><strong>State:</strong> <span id="gameState"></span></p>
+        <p><strong>Turn:</strong> <span id="currentTurn"></span></p>
+      </div>
+
+      <div id="placement" class="hidden">
+        <p>Place your fleet, then confirm.</p>
+        <button id="randomPlacementBtn" type="button">Random placement</button>
+        <button id="confirmPlacementBtn" type="button">Confirm placement</button>
+      </div>
+
+      <div class="boards">
+        <div>
+          <h3>Your fleet</h3>
+          <div id="ownGrid" class="grid"></div>
+        </div>
+        <div>
+          <h3>Enemy waters</h3>
+          <div id="enemyGrid" class="grid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/game.js"></script>
+</body>
+
+</html>
